@@ -10,5 +10,5 @@ This PowerShell script generates a series of directories representing each month
 This script is useful for organizing files by month in a structured way.
 
 ## How to Use the Script
-1. Download `month-maker.ps1` script to the location you want to generate the directories.
+1. Download `month-maker.ps1`
 2. Right click and **Run with PowerShell**
