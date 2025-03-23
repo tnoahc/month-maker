@@ -8,3 +8,8 @@ This PowerShell script generates a series of directories representing each month
 - The script uses `New-Item -ItemType Directory` to create these folders in the current directory.  
 
 This script is useful for organizing files by month in a structured way.
+
+Run the script with the bypass flag:
+```powershell
+powershell -ExecutionPolicy Bypass -File .\month-maker.ps1
+```
