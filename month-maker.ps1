@@ -1,26 +1,36 @@
-# Define the start date as January 1, 2025
-$start = Get-Date "01/01/2025"
+Add-Type -AssemblyName System.Windows.Forms
 
-# Define the end date as December 31, 2025
-$end = Get-Date "12/31/2025"
+# Create a Folder Browser Dialog
+$folderBrowser = New-Object System.Windows.Forms.FolderBrowserDialog
+$folderBrowser.Description = "Select the folder where monthly directories will be created"
 
-# Initialize the current date variable to the start date
-$current = $start
+# Show the dialog and check if the user selected a folder
+if ($folderBrowser.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
+    $targetPath = $folderBrowser.SelectedPath  # Get selected folder path
 
-# Initialize a counter to number the months sequentially
-$counter = 1
+    # Define the start and end date for 2025
+    $start = Get-Date "01/01/2025"
+    $end = Get-Date "12/31/2025"
+    $current = $start
+    $counter = 1
 
-# Loop through each month of the year 2025
-while ($current -le $end) {
-    # Format the month as "XX, MonthName" (e.g., "01, January")
-    $month = $counter.ToString("00") , $current.ToString("MMMM")
+    # Loop through each month and create folders
+    while ($current -le $end) {
+        $month = "{0:00} {1}" -f $counter, $current.ToString("MMMM")  # Format: "01 January"
+        $fullPath = Join-Path -Path $targetPath -ChildPath $month  # Create full directory path
 
-    # Create a directory with the formatted month name
-    New-Item -ItemType Directory -Path ".\$month"
+        # Create the folder if it doesn't exist
+        if (-not (Test-Path -Path $fullPath)) {
+            New-Item -ItemType Directory -Path $fullPath | Out-Null
+        }
 
-    # Move to the next month
-    $current = $current.AddMonths(1)
+        # Move to the next month
+        $current = $current.AddMonths(1)
+        $counter++
+    }
 
-    # Increment the counter for the next month
-    $counter++
+    # Show a confirmation message
+    [System.Windows.Forms.MessageBox]::Show("Monthly directories have been created in `"$targetPath`".", "Success", "OK", "Information")
+} else {
+    Write-Host "No folder was selected. Script terminated."
 }
